@@ -23,13 +23,13 @@ export default function DestinationCard({ title, description, imageSrc, icon, ta
           className="object-cover transition-transform duration-500 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-        <div className="absolute bottom-4 left-4 flex gap-2">
+        {/* <div className="absolute bottom-4 left-4 flex gap-2">
           {tags.map((tag) => (
             <Badge key={tag} variant="secondary" className="bg-white/20 text-white hover:bg-white/30">
               {tag}
             </Badge>
           ))}
-        </div>
+        </div> */}
       </div>
       <CardContent className="p-6">
         <div className="flex items-center gap-2 mb-3">

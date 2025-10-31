@@ -6,49 +6,6 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Play } from "lucide-react"
 
-const slides = [
-	{
-		id: 1,
-		image: "/hero-section/travel-planning-consultation.png?height=800&width=1200",
-		title: "Plan Your Journey",
-		subtitle: "Expert travel consultation.",
-		buttonText: "Book Now",
-		buttonLink: "/services/travel-planning-consultation",
-	},
-	{
-		id: 2,
-		image: "/hero-section/Time TOUR (1).png?height=800&width=1200",
-		title: "Explore The World",
-		subtitle: "Discover the wonders of the world.",
-		buttonText: "Book Now",
-		buttonLink: "/packages/dubai-tour",
-	},
-	{
-		id: 3,
-		image: "/hero-section/flight.png?height=800&width=1200",
-		title: "Book Your Flight",
-		subtitle: "Seamless travel starts here.",
-		buttonText: "Book Now",
-		buttonLink: "/booking?page=flight",
-	},
-	{
-		id: 4,
-		image: "/hero-section/hotel.png?height=800&width=1200",
-		title: "Luxury Stays",
-		subtitle: "Book your dream hotel.",
-		buttonText: "Book Now",
-		buttonLink: "/booking?page=hotel",
-	},
-	{
-		id: 5,
-		image: "/hero-section/business-consultation.png?height=800&width=1200",
-		title: "Business Solutions",
-		subtitle: "Your UAE partner.",
-		buttonText: "Book Now",
-		buttonLink: "/services/uae-business-consultant-activities",
-	}
-]
-
 const textVariants = {
 	hidden: {
 		opacity: 0,
@@ -107,16 +64,43 @@ const buttonVariants = {
 export default function HeroSection() {
 	const [currentSlide, setCurrentSlide] = useState(0)
 	const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+	const [slides, setSlides] = useState([])
 
 	useEffect(() => {
-		if (!isAutoPlaying) return
+		const fetchHeroes = async () => {
+			try {
+				const response = await fetch('http://localhost:1337/api/heroes?populate=*');
+				const data = await response.json();
+				const order = ['Plan Your Journey', 'Explore The World', 'Book Your Flight', 'Luxury Stays', 'Business Solutions'];
+				const fetchedSlides = (data.data || [])
+					.filter(hero => hero.is_active)
+					.map(hero => ({
+						id: hero.id,
+						image: `http://localhost:1337${hero.background_image?.[0]?.formats?.large?.url || hero.background_image?.[0]?.url}`,
+						title: hero.title,
+						subtitle: hero.subtitle,
+						buttonText: hero.button_text,
+						buttonLink: hero.button_link,
+					}))
+					.sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
+				setSlides(fetchedSlides);
+			} catch (error) {
+				console.error('Error fetching heroes from Strapi:', error);
+			}
+		};
+
+		fetchHeroes();
+	}, []);
+
+	useEffect(() => {
+		if (!isAutoPlaying || slides.length === 0) return
 
 		const interval = setInterval(() => {
 			setCurrentSlide((prev) => (prev + 1) % slides.length)
 		}, 30000)
 
 		return () => clearInterval(interval)
-	}, [isAutoPlaying])
+	}, [isAutoPlaying, slides.length])
 
 	const nextSlide = () => {
 		setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -151,6 +135,10 @@ export default function HeroSection() {
 				))}
 			</motion.div>
 		)
+	}
+
+	if (slides.length === 0) {
+		return null; // Or a loading spinner
 	}
 
 	return (

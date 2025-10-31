@@ -1,6 +1,6 @@
 "use client"
 import { Dialog, DialogContent } from "@mui/material"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Container, Typography, Box, Grid, Card, CardContent, Paper, Chip, Divider } from "@mui/material"
 import {
   Verified,
@@ -26,6 +26,21 @@ import { Pagination, Autoplay } from 'swiper/modules';
 export default function AboutPage() {
   const [selectedCertificate, setSelectedCertificate] = useState<null | { image: string; title: string }>(null)
   const [openDialog, setOpenDialog] = useState(false)
+  const [aboutData, setAboutData] = useState(null)
+
+  useEffect(() => {
+    const fetchAboutData = async () => {
+      try {
+        const response = await fetch('http://localhost:1337/api/about-pages?populate=*');
+        const data = await response.json();
+        setAboutData(data.data?.[0] || null);
+      } catch (error) {
+        console.error('Error fetching about data from Strapi:', error);
+      }
+    };
+
+    fetchAboutData();
+  }, []);
 
   const handleOpenCertificate = (cert: { image: string; title: string }) => {
     setSelectedCertificate(cert)
@@ -45,24 +60,11 @@ export default function AboutPage() {
   ]
 
   // Certificates data with image placeholders
-  const certificates = [
-    {
-      title: "Certificate of Appreciation",
-      description: "For an active participation in reviewing the Zeroing Bureaucracy Charter for government",
-      year: "2024",
-      //   certificateNumber: "ETO-2023-001234",
-      image: "/certificates/Apprtiaction Certificate-1.png?height=400&width=300&text=ETO+Certificate",
-      icon: Verified,
-    },
-    {
-      title: "Certificate of Channel Partnership",
-      description: "in recognition for being our valued channel partner",
-      year: "2025",
-      //   certificateNumber: "IATA-2022-567890",
-      image: "/certificates/WORKDANE CHANNEL PARTNER_CERTFICATE_250227_153946-1.png?height=400&width=300&text=IATA+Certificate",
-      icon: TravelExplore,
-    },
-  ]
+  const certificates = aboutData?.certificates?.map((cert, index) => ({
+    ...cert,
+    image: index === 0 ? "/certificates/Apprtiaction Certificate-1.png?height=400&width=300&text=ETO+Certificate" : "/certificates/WORKDANE CHANNEL PARTNER_CERTFICATE_250227_153946-1.png?height=400&width=300&text=IATA+Certificate",
+    icon: index === 0 ? Verified : TravelExplore,
+  })) || [];
 
   const values = [
     {
@@ -121,6 +123,10 @@ export default function AboutPage() {
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   }
 
+  if (!aboutData) {
+    return <div>Loading...</div>; // Or a proper loading component
+  }
+
 
   return (
     <Box sx={{ minHeight: "100vh" }}>
@@ -145,6 +151,7 @@ export default function AboutPage() {
             zIndex: 0,
             "&::before": {
               content: '""',
+              content: '""',
               position: "absolute",
               top: 0,
               left: 0,
@@ -157,7 +164,7 @@ export default function AboutPage() {
         >
           <Box
             component="img"
-            src="/about-us.jpg?height=1080&width=1920&text=Ethiopian+Landscape"
+            src={`http://localhost:1337${aboutData.hero_cover?.url || "/about-us.jpg?height=1080&width=1920&text=Ethiopian+Landscape"}`}
             alt="About Werkdane tour and travel"
             sx={{
               width: "100%",
@@ -237,18 +244,11 @@ export default function AboutPage() {
             </Typography>
             <Typography variant="h6" paragraph color="text.secondary" sx={{ mb: 4 }}>
             </Typography>
-            <Typography className="text-center" variant="body1" paragraph sx={{ fontSize: "1.1rem", lineHeight: 1.8 }}>
-              Werkdane tour and travel is a travel company that offers a unique and personalized experience for travelers. We are passionate about providing authentic and sustainable travel experiences that are tailored to meet the needs and preferences of our clients. Our mission is to create memories that will last a lifetime.
-            </Typography>
-            <Typography className="text-center" variant="body1" paragraph sx={{ fontSize: "1.1rem", lineHeight: 1.8 }}>
-              What started as a small local operation has grown into a trusted travel company, serving hundreds of
-              satisfied travelers from around the globe. We've built our reputation on delivering exceptional
-              experiences while maintaining the highest standards of safety, authenticity, and sustainability.
-            </Typography>
-            <Typography className="text-center" variant="body1" paragraph sx={{ fontSize: "1.1rem", lineHeight: 1.8 }}>
-              Today, we are proud to be recognized as one of Ethiopia's leading travel companies, with multiple
-              certifications and awards that reflect our commitment to excellence and responsible tourism.
-            </Typography>
+            {aboutData.story_text.split('\n\n').map((paragraph, index) => (
+              <Typography key={index} className="text-center" variant="body1" paragraph sx={{ fontSize: "1.1rem", lineHeight: 1.8 }}>
+                {paragraph}
+              </Typography>
+            ))}
           </Grid>
         </Grid>
       </Container>
@@ -359,7 +359,7 @@ export default function AboutPage() {
                       <Verified sx={{ color: "success.main", fontSize: 20 }} />
                     </Box>
 
-                    <Typography variant="h6" component="h3" gutterBottom fontWeight="bold" color="primary.main">
+                    <Typography variant="h6" variant="h6" component="h3" gutterBottom fontWeight="bold" color="primary.main">
                       {cert.title}
                     </Typography>
 
@@ -536,7 +536,7 @@ export default function AboutPage() {
               </Grid>
             </Grid>
 
-            <Box sx={{ display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
+            <Box sx={{ display: "flex", display: "flex", gap: 2, justifyContent: "center", flexWrap: "wrap" }}>
               <Chip
                 label="Licensed & Insured"
                 sx={{

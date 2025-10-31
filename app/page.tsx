@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import AOS from "aos"
 import "aos/dist/aos.css"
 import Link from "next/link"
@@ -42,6 +42,35 @@ export default function Home() {
       easing: "ease-in-out",
     })
   }, [])
+
+  const [destinations, setDestinations] = useState([]);
+  const [services, setServices] = useState([]);
+
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      try {
+        const response = await fetch('http://localhost:1337/api/destinations?populate=*');
+        const data = await response.json();
+        setDestinations(data.data || []);
+      } catch (error) {
+        console.error('Error fetching destinations from Strapi:', error);
+      }
+    };
+
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('http://localhost:1337/api/services?populate=*');
+        const data = await response.json();
+        setServices(data.data || []);
+      } catch (error) {
+        console.error('Error fetching services from Strapi:', error);
+      }
+    };
+
+    fetchDestinations();
+    fetchServices();
+  }, []);
+
   const values = [
     {
       id: 0,
@@ -111,61 +140,23 @@ export default function Home() {
               </p>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <DestinationCard
-                title="Dubai UAE"
-                description="Dubai is the capital of the United Arab Emirates, a country known for its modernity, luxury, and innovation. It's a bustling metropolis with a rich history and a vibrant culture. Whether you're looking for a luxurious getaway or a thrilling adventure, Dubai has something for everyone."
-                imageSrc="/dubai-front.png?height=400&width=600"
-                icon={<Palmtree className="h-5 w-5" />}
-                tags={["Cultural", "Luxury", "Modern", "UAE"]}
-              />
-              <DestinationCard
-                title="China Guangzhou"
-                description="Guangzhou is the capital city of the People's Republic of China, a country known for its rich history, culture, and cuisine. It's a bustling metropolis with a mix of modern and traditional architecture, as well as a vibrant food scene. Whether you're looking for a cultural experience or a bustling nightlife, Guangzhou has something for everyone."
-                imageSrc="/china-front.png?height=400&width=600"
-                icon={<MapPin className="h-5 w-5" />}
-                tags={["Cultural", "Historical", "Chinese"]}
-              />
-              <DestinationCard
-                title="Turkey Istanbul"
-                description="Istanbul is the capital city of Turkey, a country known for its rich history, culture, and cuisine. It's a bustling metropolis with a mix of modern and traditional architecture, as well as a vibrant food scene. Whether you're looking for a cultural experience or a bustling nightlife, Istanbul has something for everyone."
-                imageSrc="/turkey-front.png?height=400&width=600"
-                icon={<MapPin className="h-5 w-5" />}
-                tags={["Cultural", "Historical", "Turkish"]}
-              />
-              {/* <DestinationCard
-                title="The Shadow That Follows the Sphinx"
-                description="She never moves, but she watches everything.
-                             The Sphinx has stared across the Giza Plateau longer than history can comfortably explain. Tourists come for her profile, her silence, her size. But one guide—Amir, wiry, chain-smoking, with a poet’s soul—told me to watch the shadow.
-                             Midday, he said, her shadow points directly toward the Nile. Always.” He believes it was a map, a divine compass, guiding lost travelers back to life. Not superstition, he shrugged. Just old wisdom.
-                             And then, almost sheepishly, he showed me his forearm. Inked there was a rough outline of the Sphinx’s shadow from above. So I always know where I’m going, he said, grinning.
-                             In Egypt, even the silence casts meaning. The shadow tells the story that the monument does not: not of kings or gods, but of direction, of orientation, of how to keep moving forward even when time stands still."
-                imageSrc="/placeholder.svg?height=400&width=600"
-                icon={<Utensils className="h-5 w-5" />}
-                tags={["Cultural", "Culinary", "Bustling", "Egypt"]}
-              />
-              <DestinationCard
-                title="The Man Who Weaves the Sky in Rajasthan"
-                description="Every spring in Jaipur, the skies bloom. Not with birds, but with kites—saffron, indigo, vermilion—fighting for wind, for glory, for a moment of flight.
-                             On the edge of the Pink City, I met Karim, an old kite-maker whose fingers worked faster than sight. His designs weren’t fancy—no glitter or gold—just careful lines, balance, a whisper of bamboo.
-                             “These are not toys,” he said, smiling. “They are letters to the sky.”
-                             His father had taught him the craft during Partition, when flight meant freedom. Now, Karim’s grandson battles digital distractions and cheap imports, but still returns each January to fly what they’ve made—three generations tethered by string.
-                             In Rajasthan, tradition is not preserved in temples. It lives in the air, pulled taut between fingers, flicked into motion, stitched with longing.
-                             And when Karim launches his first kite of the season, he looks up—not to win, but to remember."
-                imageSrc="/placeholder.svg?height=400&width=600"
-                icon={<Map className="h-5 w-5" />}
-                tags={["Nature", "Peaceful", "Majestic", "India"]}
-              />
-              <DestinationCard
-                title="The Wind that Sings in the Scottish Highlands"
-                description="In Glencoe, the hills do not roll—they brood.
-                             I stood alone on a narrow path near Buachaille Etive Mòr, when the wind shifted—hard and sudden, like it was saying something. A shepherd had warned me: “The glen remembers.”
-                             He meant the massacre, of course—1692, when kin turned on kin over clan and crown. But he also meant the deeper remembering: the way mist clings to heather, the way the moor hushes footfalls, the strange calm before sudden storms.
-                             That afternoon, I heard it—the wind weaving through the grass, striking rocks, keening low. Some say it’s science: acoustics, geography. Others say it’s mourning.
-                             The Highlands hold stories in their breath. They don’t demand to be told—they just ask to be felt."
-                imageSrc="/placeholder.svg?height=400&width=600"
-                icon={<Palmtree className="h-5 w-5" />}
-                tags={["Island", "Scenic", "Romantic", "Scotland"]}
-              /> */}
+              {destinations.map((dest) => {
+                let icon = <MapPin className="h-5 w-5" />;
+                if (dest.title.toLowerCase().includes('uae') || dest.title.toLowerCase().includes('dubai')) {
+                  icon = <Palmtree className="h-5 w-5" />;
+                } // Add more conditions if needed for other destinations like China/Turkey
+
+                return (
+                  <DestinationCard
+                    key={dest.id}
+                    title={dest.title}
+                    description={dest.description?.[0]?.children?.[0]?.text || 'No description available'}
+                    imageSrc={`http://localhost:1337${dest.image?.[0]?.formats?.medium?.url || dest.image?.[0]?.url}`}
+                    icon={icon}
+                    tags={dest.tags ? dest.tags.split(/\s*,\s*|\s+/).map(t => t.trim()).filter(Boolean) : []}
+                  />
+                );
+              })}
             </div>
 
           </div>
@@ -221,85 +212,34 @@ export default function Home() {
               </p>
             </div>
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              <ServiceCard
-                title="Travel Planning & Consultation"
-                description="Whether you’re planning a honeymoon, a solo trip, or a group adventure, our Travel Planning & Consultation service takes the stress out of organizing your journey."
-                icon={PlaneTakeoff}
-                features={[
-                  "Tailored travel plans based on your interests, time, and budget.",
-                  "Guidance with document preparation and application tracking.",
-                  "Expert suggestions on where to go and when to go.",
-                  "Smart cost breakdowns to make the most of your money.",
-                  "Personalized advice and recommendations via call, chat, or in-person.",
-                ]}
-                popular={true}
-                link="/services/travel-planning-consultation"
-              />
-              <ServiceCard
-                title="🇦🇪 UAE Business Consultant Activities"
-                description="From company setup to strategic advisory, our UAE Business Consultant services provide end-to-end support for entrepreneurs and corporations looking to establish and grow in the UAE market."
-                icon={BriefcaseBusiness}
-                features={[
-                  "Complete support for Mainland, Free Zone, and Offshore company formation.",
-                  "Professional document handling, licensing, and visa services.",
-                  "Expert business strategy and market entry advisory.",
-                  "Banking, taxation, and legal document assistance under one roof.",
-                  "Networking, events, and branding support for scaling businesses.",
-                ]}
-                popular={true}
-                link="/services/uae-business-consultant-activities"
-              />
-              <ServiceCard
-                title="Visa Services"
-                description="We assist travelers with fast and reliable visa processing for multiple destinations. Whether it's tourist, business, or transit visas, our team ensures a smooth and hassle-free experience, handling all the paperwork and embassy communication for you."
-                icon={File} // if using Lucide
-                features={[
-                  "Tourist, Business, and Transit visa support",
-                  "Guidance on visa requirements and eligibility",
-                  "Document preparation and embassy submission",
-                  "Expedited processing for urgent travel needs",
-                  "Real-time updates on application status",
-                ]}
-                popular={true}
-                link="/services/visa-services"
-              />
+              {services.map((service) => {
+                let IconComponent = File;
+                let title = service.title;
+                if (title.toLowerCase().includes('travel planning')) {
+                  IconComponent = PlaneTakeoff;
+                } else if (title.toLowerCase().includes('uae')) {
+                  IconComponent = BriefcaseBusiness;
+                  title = `🇦🇪 ${title}`;
+                } else if (title.toLowerCase().includes('visa')) {
+                  IconComponent = File;
+                }
 
-              {/*<ServiceCard
-                title="Wilderness & Adventure Narratives"
-                description="Experience the natural world through carefully crafted outdoor journeys."
-                icon={Mountain}
-                features={[
-                  "Expert naturalist guides for wildlife encounters",
-                  "Secluded hiking trails away from crowds",
-                  "Sunrise and sunset experiences in breathtaking locations",
-                  "Comfortable yet authentic wilderness accommodations",
-                  "Conservation-focused activities",
-                ]}
-              />
-              <ServiceCard
-                title="Luxury Transportation Curation"
-                description="Travel in comfort with our seamlessly arranged transportation services."
-                icon={Waves}
-                features={[
-                  "Private drivers familiar with scenic routes",
-                  "Luxury vehicle selection based on terrain and preference",
-                  "Helicopter and private boat transfers to remote locations",
-                  "Vintage and specialty vehicle experiences",
-                  "24/7 transportation concierge",
-                ]}
-              />
-              <ServiceCard
-                title="Storytelling Photography Service"
-                description="Capture your journey through professional photography that tells your travel story."
-                icon={Camera}
-                features={[
-                  "Professional photographer for half or full-day sessions",
-                  "Candid moments captured without intrusion",
-                  "Destination-specific iconic and hidden photo locations",
-                  "Professionally edited digital gallery",
-                  "Handcrafted photo book of your journey",
-                ]}
-              /> */}
+                const featuresArray = service.features 
+                  ? service.features.split(/\s*(?=[A-Z])/).map(f => f.replace(/\.$/, '').trim()).filter(Boolean)
+                  : [];
+
+                return (
+                  <ServiceCard
+                    key={service.id}
+                    title={title}
+                    description={service.description || 'No description available'}
+                    icon={IconComponent}
+                    features={featuresArray}
+                    popular={true}
+                    link={service.link}
+                  />
+                );
+              })}
             </div>
           </div>
         </section>

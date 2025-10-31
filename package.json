@@ -47,6 +47,7 @@
     "@vercel/speed-insights": "^1.2.0",
     "aos": "^2.3.4",
     "autoprefixer": "^10.4.20",
+    "axios": "^1.12.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
