@@ -1,4 +1,4 @@
-// Strapi API utility functions
+// Strapi API utility functions and
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
 
