@@ -122,7 +122,8 @@ export async function getAllTourSlugs(): Promise<string[]> {
 // lib/strapi/api.ts
 export async function getTourLinks() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/tour-pages?fields[0]=package_list_name&fields[1]=slug`, {
-    next: { revalidate: 0 }, // revalidate every hour
+    // Use ISR in production (1 hour). Keep immediate revalidation in dev for fast iteration.
+    next: { revalidate: process.env.NODE_ENV === 'production' ? 3600 : 0 },
   });
   const { data } = await res.json();
   return data.map((item: any) => ({
@@ -238,7 +239,8 @@ export async function getAllServiceSlugs(): Promise<string[]> {
  */
 export async function getServiceLinks() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/service-pages?fields[0]=title&fields[1]=slug`, {
-    next: { revalidate: 0 },
+    // Use ISR in production (1 hour). Keep immediate revalidation in dev for fast iteration.
+    next: { revalidate: process.env.NODE_ENV === 'production' ? 3600 : 0 },
   });
   const { data } = await res.json();
   return data.map((item: any) => ({
