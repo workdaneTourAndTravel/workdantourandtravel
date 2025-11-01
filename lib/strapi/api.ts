@@ -1,4 +1,4 @@
-// Strapi API utility functions and added branch to vercel
+// Strapi API utility functions and added branch to vercel test
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
 
