@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
-import { getServicePageBySlug, getAllServiceSlugs, getStrapiImageUrl } from '@/lib/strapi/api'
+import { getServicePageBySlug, getAllServiceSlugs, getStrapiImageUrl, getSiteLogo } from '@/lib/strapi/api'
 import { Card, CardContent } from '@/components/ui/card'
 import { BookingModal } from './booking-modal'
 import { FAQSection } from './faq-section'
@@ -18,7 +18,11 @@ export async function generateStaticParams() {
 
 // Generate metadata dynamically
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const service = await getServicePageBySlug(params.slug)
+  const [service, siteLogo] = await Promise.all([
+    getServicePageBySlug(params.slug),
+    getSiteLogo(),
+  ])
+  const siteName = siteLogo.site_name || 'Werkdan Tour and Travel'
 
   if (!service) {
     return {
@@ -27,7 +31,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 
   return {
-    title: `${service.title} | Werkdan Tour and Travel`,
+    title: `${service.title} | ${siteName}`,
     description: service.section_description || service.short_description || `Explore our ${service.title} service`,
   }
 }

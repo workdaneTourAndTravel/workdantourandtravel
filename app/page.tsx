@@ -33,8 +33,11 @@ import { Camera } from "lucide-react"
 import HeroSection from "@/components/hero-section"
 import LogoClouds from "@/components/logo-clouds"
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import HomepageBanners from "@/components/homepage-banners"
+import TravelLoadingScreen from "@/components/travel-loading-screen"
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     AOS.init({
@@ -47,28 +50,26 @@ export default function Home() {
   const [services, setServices] = useState([]);
 
   useEffect(() => {
-    const fetchDestinations = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:1337/api/destinations?populate=*');
-        const data = await response.json();
-        setDestinations(data.data || []);
+        const [destRes, servRes] = await Promise.all([
+          fetch('http://localhost:1337/api/destinations?populate=*'),
+          fetch('http://localhost:1337/api/services?populate=*'),
+        ]);
+
+        const destData = await destRes.json();
+        const servData = await servRes.json();
+
+        setDestinations(destData.data || []);
+        setServices(servData.data || []);
       } catch (error) {
-        console.error('Error fetching destinations from Strapi:', error);
+        console.error('Error fetching data from Strapi:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    const fetchServices = async () => {
-      try {
-        const response = await fetch('http://localhost:1337/api/services?populate=*');
-        const data = await response.json();
-        setServices(data.data || []);
-      } catch (error) {
-        console.error('Error fetching services from Strapi:', error);
-      }
-    };
-
-    fetchDestinations();
-    fetchServices();
+    fetchData();
   }, []);
 
   const values = [
@@ -122,10 +123,15 @@ export default function Home() {
     }
   ]
 
+  if (isLoading) {
+    return <TravelLoadingScreen />
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <main className="flex-1">
         <HeroSection />
+        <HomepageBanners placement="homepage_top" />
         <section id="destinations" className="py-8">
           <div className="container">
             <div className="mb-12 text-center">
@@ -244,6 +250,7 @@ export default function Home() {
           </div>
         </section>
         {/* <LogoClouds /> */}
+        <HomepageBanners placement="homepage_middle" />
         <section id="stories" className="py-7">
           <div className="container">
             <div className="mb-12 text-center">

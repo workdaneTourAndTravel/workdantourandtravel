@@ -132,6 +132,106 @@ export async function getTourLinks() {
   }));
 }
 
+// ==================== SITE LOGO ====================
+
+export interface SiteLogo {
+  logo?: StrapiImage
+  site_name?: string
+}
+
+/**
+ * Fetch the site logo from Strapi (single type)
+ */
+export async function getSiteLogo(): Promise<SiteLogo> {
+  try {
+    const url = `${STRAPI_URL}/api/logo?populate=*`
+
+    const response = await fetch(url, {
+      next: { revalidate: process.env.NODE_ENV === 'production' ? 3600 : 0 }
+    })
+
+    if (!response.ok) return {}
+
+    const result = await response.json()
+    return result.data || {}
+  } catch (error) {
+    console.error('Error fetching site logo:', error)
+    return {}
+  }
+}
+
+// ==================== CONTACT INFO ====================
+
+export interface Office {
+  name: string
+  address?: string
+  phones?: string
+  email?: string
+  maps_embed_url?: string
+}
+
+export interface ContactInfo {
+  whatsapp_number?: string
+  whatsapp_message?: string
+  offices?: Office[]
+  business_hours?: string
+  business_days?: string
+  emergency_support_note?: string
+}
+
+/**
+ * Fetch global contact info from Strapi (single type)
+ */
+export async function getContactInfo(): Promise<ContactInfo> {
+  try {
+    const url = `${STRAPI_URL}/api/contact-info?populate=*`
+
+    const response = await fetch(url, {
+      next: { revalidate: process.env.NODE_ENV === 'production' ? 3600 : 0 }
+    })
+
+    if (!response.ok) return {}
+
+    const result = await response.json()
+    return result.data || {}
+  } catch (error) {
+    console.error('Error fetching contact info:', error)
+    return {}
+  }
+}
+
+// ==================== SOCIAL LINKS ====================
+
+export interface SocialLinks {
+  facebook?: string
+  instagram?: string
+  twitter?: string
+  youtube?: string
+  tiktok?: string
+  telegram?: string
+}
+
+/**
+ * Fetch social media links from Strapi (single type)
+ */
+export async function getSocialLinks(): Promise<SocialLinks> {
+  try {
+    const url = `${STRAPI_URL}/api/social-link`
+
+    const response = await fetch(url, {
+      next: { revalidate: process.env.NODE_ENV === 'production' ? 3600 : 0 }
+    })
+
+    if (!response.ok) return {}
+
+    const result = await response.json()
+    return result.data || {}
+  } catch (error) {
+    console.error('Error fetching social links:', error)
+    return {}
+  }
+}
+
 // ==================== SERVICE PAGES ====================
 
 export interface ServicePage {

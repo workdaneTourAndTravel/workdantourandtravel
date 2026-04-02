@@ -1,14 +1,21 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
-import { getAllServicePages, getStrapiImageUrl } from '@/lib/strapi/api'
+import { getAllServicePages, getStrapiImageUrl, getSiteLogo } from '@/lib/strapi/api'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ArrowRight } from 'lucide-react'
 
-export const metadata: Metadata = {
-  title: 'Our Services | Werkdan Tour and Travel',
-  description: 'Explore our comprehensive travel services including visa assistance, travel consultation, and business activities support.',
+export async function generateMetadata(): Promise<Metadata> {
+  let siteName = 'Werkdan Tour and Travel'
+  try {
+    const siteLogo = await getSiteLogo()
+    if (siteLogo.site_name) siteName = siteLogo.site_name
+  } catch {}
+  return {
+    title: `Our Services | ${siteName}`,
+    description: 'Explore our comprehensive travel services including visa assistance, travel consultation, and business activities support.',
+  }
 }
 
 export const revalidate = 3600 // Revalidate every hour

@@ -95,7 +95,11 @@ interface City {
   value: string
 }
 
-export default function BookingForm() {
+interface BookingFormProps {
+  whatsappNumber?: string
+}
+
+export default function BookingForm({ whatsappNumber = "251906700007" }: BookingFormProps) {
   const [bookingType, setBookingType] = useState<BookingType>("flight")
   const [airportOptions, setAirportOptions] = useState<Airport[]>([])
   const [cityOptions, setCityOptions] = useState<City[]>([])
@@ -602,7 +606,7 @@ ${imgLinks}`.trim()
     if (!validateStep2()) return
     setIsSubmitted(true)
     const waMessage = formatWhatsAppMessage()
-    window.open(`https://wa.me/251906700007?text=${waMessage}`, "_blank")
+    window.open(`https://wa.me/${whatsappNumber}?text=${waMessage}`, "_blank")
     setTimeout(() => {
       setIsSubmitted(false)
       resetForms()

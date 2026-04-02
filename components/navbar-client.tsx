@@ -30,9 +30,11 @@ interface ServiceLink {
 interface NavbarClientProps {
   tourLinks: TourLink[]
   serviceLinks: ServiceLink[]
+  logoUrl?: string
+  siteName?: string
 }
 
-export default function NavbarClient({ tourLinks, serviceLinks }: NavbarClientProps) {
+export default function NavbarClient({ tourLinks, serviceLinks, logoUrl = '/logo/navbar-workdan-logo.png', siteName = 'WORKDANE TOUR AND TRAVEL' }: NavbarClientProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   // Transform tour links into the format expected by the component
@@ -57,9 +59,9 @@ export default function NavbarClient({ tourLinks, serviceLinks }: NavbarClientPr
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3">
           <div className="flex items-center">
-            <Image src="/logo/navbar-workdan-logo.png" alt="workdan logo" width={100} height={200} />
+            <Image src={logoUrl} alt="workdan logo" width={100} height={200} />
             <div className="ml-3">
-              <div className="text-xl font-bold text-blue-500">WORKDANE TOUR AND TRAVEL</div>
+              <div className="text-xl font-bold text-blue-500">{siteName}</div>
             </div>
           </div>
         </Link>
@@ -224,9 +226,9 @@ export default function NavbarClient({ tourLinks, serviceLinks }: NavbarClientPr
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
             <SheetHeader>
               <SheetTitle className="flex items-center space-x-3 text-left">
-                <Image src="/logo/navbar-workdan-logo.png" alt="workdan logo" width={100} height={200} />
+                <Image src={logoUrl} alt="workdan logo" width={100} height={200} />
                 <div>
-                  <div className="text-lg font-bold text-blue-500">WORKDAN TOUR AND TRAVEL</div>
+                  <div className="text-lg font-bold text-blue-500">{siteName}</div>
                 </div>
               </SheetTitle>
             </SheetHeader>

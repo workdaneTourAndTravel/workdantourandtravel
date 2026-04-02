@@ -2,14 +2,19 @@
 
 import React from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-function WhatsappLive() {
-    const whatsappNumber = "251906700007";
+interface WhatsappLiveProps {
+  whatsappNumber?: string
+  whatsappMessage?: string
+}
+
+function WhatsappLive({
+  whatsappNumber = "251906700007",
+  whatsappMessage = "Hello, I would like to book a tour and travel with your company.",
+}: WhatsappLiveProps) {
     const baseUrl = "https://api.whatsapp.com/send/";
-    const encodedMessage = `Hello, I would like to book a tour and travel with your company.`;
-    const WhatsappLink = `${baseUrl}?phone=${whatsappNumber}&text=${encodedMessage}&type=phone_number&app_absent=0`;
+    const WhatsappLink = `${baseUrl}?phone=${whatsappNumber}&text=${encodeURIComponent(whatsappMessage)}&type=phone_number&app_absent=0`;
 
   return (
     <div className="fixed bottom-6 left-8 z-50">

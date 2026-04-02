@@ -8,47 +8,53 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import WhatsappLive from './WhatsappLive'
+import { getActiveAnnouncements, getActiveBanners } from '@/lib/strapi/banners'
+import AnnouncementBar from '@/components/announcement-bar'
+import PopupBanner from '@/components/popup-banner'
+import { getSiteLogo, getContactInfo } from '@/lib/strapi/api'
 
-export const metadata: Metadata = {
-  title: 'Werkdan Tour and Travel',
-  description: 'Werkdan Tour and Travel',
-  generator: 'v0.dev',
+export async function generateMetadata(): Promise<Metadata> {
+  let siteName = 'Werkdan Tour and Travel'
+  try {
+    const siteLogo = await getSiteLogo()
+    if (siteLogo.site_name) siteName = siteLogo.site_name
+  } catch {}
+  return {
+    title: siteName,
+    description: siteName,
+    generator: 'v0.dev',
+  }
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const [topAnnouncements, belowNavbarAnnouncements, footerAnnouncements, popupBanners, contactInfo] = await Promise.all([
+    getActiveAnnouncements('top_bar'),
+    getActiveAnnouncements('below_navbar'),
+    getActiveAnnouncements('footer_above'),
+    getActiveBanners('popup'),
+    getContactInfo(),
+  ])
+
   return (
     <html lang="en">
-      {/* <Head>
-        <script
-          id="mcjs"
-          dangerouslySetInnerHTML={{
-            __html: `
-              !function(c,h,i,m,p){
-                m=c.createElement(h),
-                p=c.getElementsByTagName(h)[0],
-                m.async=1,
-                m.src=i,
-                p.parentNode.insertBefore(m,p)
-              }(
-                document,
-                "script",
-                "https://chimpstatic.com/mcjs-connected/js/users/57449e8ecc51299264551675f/b7ab15da10a0de831d4a98c4e.js"
-              );
-            `,
-          }}
-        />
-      </Head> */}
       <body>
+        <AnnouncementBar announcements={topAnnouncements} />
         <Navbar />
+        <AnnouncementBar announcements={belowNavbarAnnouncements} />
         {children}
         <SpeedInsights />
         <Analytics />
+        <AnnouncementBar announcements={footerAnnouncements} />
         <Footer />
-        <WhatsappLive />
+        <PopupBanner banners={popupBanners} />
+        <WhatsappLive
+          whatsappNumber={contactInfo.whatsapp_number}
+          whatsappMessage={contactInfo.whatsapp_message}
+        />
         {/* Tawk.to Script - load via external src (avoids inline DOM mutations before React hydration) */}
         <Script
           id="tawk-to"
