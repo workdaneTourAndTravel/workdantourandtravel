@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence } from 'motion/react'
 import { Play, ImageIcon, X, ZoomIn, Filter } from 'lucide-react'
 import { DialogTitle } from '@radix-ui/react-dialog'
 

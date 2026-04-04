@@ -32,7 +32,7 @@ import {
   Building2,
   Calendar,
 } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence } from "motion/react"
 import { cn } from "@/lib/utils"
 
 type BookingType = "flight" | "hotel"

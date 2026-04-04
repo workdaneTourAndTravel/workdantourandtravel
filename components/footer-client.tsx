@@ -6,7 +6,7 @@ import type { ContactInfo, SocialLinks, Office } from "@/lib/strapi/api"
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
