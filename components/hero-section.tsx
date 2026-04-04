@@ -4,7 +4,9 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Play } from "lucide-react"
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react"
+
+const STRAPI_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
 
 const textVariants = {
 	hidden: {
@@ -61,28 +63,54 @@ const buttonVariants = {
 	},
 }
 
+function AnimatedText({
+	text,
+	className,
+	delay = 0,
+}: {
+	text: string
+	className: string
+	delay?: number
+}) {
+	const words = text.split(" ")
+
+	return (
+		<motion.div className={className} initial="hidden" animate="visible">
+			{words.map((word, i) => (
+				<motion.span
+					key={i}
+					custom={i + delay}
+					variants={wordVariants}
+					className="inline-block mr-3"
+				>
+					{word}
+				</motion.span>
+			))}
+		</motion.div>
+	)
+}
+
 export default function HeroSection() {
 	const [currentSlide, setCurrentSlide] = useState(0)
-	const [isAutoPlaying, setIsAutoPlaying] = useState(true)
-	const [slides, setSlides] = useState([])
+	const [slides, setSlides] = useState<any[]>([])
 
 	useEffect(() => {
 		const fetchHeroes = async () => {
 			try {
-				const response = await fetch('http://localhost:1337/api/heroes?populate=*');
+				const response = await fetch(`${STRAPI_URL}/api/heroes?populate=*`);
 				const data = await response.json();
 				const order = ['Plan Your Journey', 'Explore The World', 'Book Your Flight', 'Luxury Stays', 'Business Solutions'];
 				const fetchedSlides = (data.data || [])
-					.filter(hero => hero.is_active)
-					.map(hero => ({
+					.filter((hero: any) => hero.is_active)
+					.map((hero: any) => ({
 						id: hero.id,
-						image: `http://localhost:1337${hero.background_image?.[0]?.formats?.large?.url || hero.background_image?.[0]?.url}`,
+						image: `${STRAPI_URL}${hero.background_image?.[0]?.formats?.large?.url || hero.background_image?.[0]?.url}`,
 						title: hero.title,
 						subtitle: hero.subtitle,
 						buttonText: hero.button_text,
 						buttonLink: hero.button_link,
 					}))
-					.sort((a, b) => order.indexOf(a.title) - order.indexOf(b.title));
+					.sort((a: any, b: any) => order.indexOf(a.title) - order.indexOf(b.title));
 				setSlides(fetchedSlides);
 			} catch (error) {
 				console.error('Error fetching heroes from Strapi:', error);
@@ -93,14 +121,14 @@ export default function HeroSection() {
 	}, []);
 
 	useEffect(() => {
-		if (!isAutoPlaying || slides.length === 0) return
+		if (slides.length === 0) return
 
 		const interval = setInterval(() => {
 			setCurrentSlide((prev) => (prev + 1) % slides.length)
-		}, 30000)
+		}, 7000)
 
 		return () => clearInterval(interval)
-	}, [isAutoPlaying, slides.length])
+	}, [slides.length])
 
 	const nextSlide = () => {
 		setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -110,56 +138,20 @@ export default function HeroSection() {
 		setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
 	}
 
-	const AnimatedText = ({
-		text,
-		className,
-		delay = 0,
-	}: {
-		text: string
-		className: string
-		delay?: number
-	}) => {
-		const words = text.split(" ")
-
-		return (
-			<motion.div className={className} initial="hidden" animate="visible">
-				{words.map((word, i) => (
-					<motion.span
-						key={i}
-						custom={i + delay}
-						variants={wordVariants}
-						className="inline-block mr-2"
-					>
-						{word}
-					</motion.span>
-				))}
-			</motion.div>
-		)
-	}
-
 	if (slides.length === 0) {
-		return null; // Or a loading spinner
+		return null
 	}
 
 	return (
-		<section className="relative h-[85vh] sm:h-[90vh] md:h-screen w-full overflow-hidden bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-teal-900/20">
-			{/* Animated Aurora Background */}
-			<div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-teal-900/20">
-				<div className="absolute inset-0 bg-gradient-to-r from-pink-500/10 via-purple-500/10 to-cyan-500/10 animate-pulse" />
-				<div
-					className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-transparent to-transparent animate-spin"
-					style={{ animationDuration: "20s" }}
-				/>
-			</div>
-
-			<AnimatePresence mode="wait">
+		<section className="relative h-[85vh] sm:h-[90vh] md:h-screen w-full overflow-hidden bg-black">
+			<AnimatePresence>
 				<motion.div
-					// key={currentSlide}
-					// initial={{ opacity: 0, scale: 1.1 }}
-					// animate={{ opacity: 1, scale: 1 }}
-					// exit={{ opacity: 0, scale: 0.9 }}
-					// transition={{ duration: 1, ease: "easeInOut" }}
-					className="absolute inset-0 bg-slate-500"
+					key={currentSlide}
+					initial={{ opacity: 0 }}
+					animate={{ opacity: 1 }}
+					exit={{ opacity: 0 }}
+					transition={{ duration: 0.7, ease: "easeInOut" }}
+					className="absolute inset-0"
 				>
 					<Image
 						src={slides[currentSlide].image || "/placeholder.svg"}
@@ -168,8 +160,8 @@ export default function HeroSection() {
 						className="object-cover"
 						priority
 					/>
-					<div className="absolute inset-0" />
-					<div className="absolute inset-0 bg-gradient-to-b" />
+					{/* Dark gradient overlay for text readability */}
+					<div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
 				</motion.div>
 			</AnimatePresence>
 
@@ -184,19 +176,19 @@ export default function HeroSection() {
 							exit="hidden"
 							className="max-w-4xl mx-auto"
 						>
-							{/* Main Title with Background */}
+							{/* Main Title */}
 							<AnimatedText
 								text={slides[currentSlide].title}
-								className="bg-transparent text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-blue-500 text-white px-4 py-2 rounded-md inline-block leading-tight"
+								className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-white leading-tight drop-shadow-lg"
 							/>
 
 							{/* Subtitle */}
 							<motion.div
 								custom={2}
 								variants={textVariants}
-								className="mb-8"
+								className="mb-10"
 							>
-								<p className="text-xl md:text-2xl font-bold lg:text-3xl text-white tracking-wide">
+								<p className="text-xl md:text-2xl lg:text-3xl text-white/90 tracking-wide font-light">
 									{slides[currentSlide].subtitle}
 								</p>
 							</motion.div>
@@ -210,18 +202,15 @@ export default function HeroSection() {
 							>
 								<Button
 									size="lg"
-									className="relative overflow-hidden bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 hover:from-purple-700 hover:via-pink-700 hover:to-blue-700 text-white border-0 px-8 py-4 text-lg font-semibold rounded-full shadow-2xl group"
+									className="bg-blue-600 hover:bg-blue-700 text-white border-0 px-8 py-6 text-lg font-semibold rounded-full shadow-2xl group"
 									asChild
 								>
 									<a
 										href={slides[currentSlide].buttonLink}
-										className="flex items-center gap-2"
+										className="flex items-center gap-3"
 									>
-										<span className="relative z-10">
-											{slides[currentSlide].buttonText}
-										</span>
-										<Play className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform duration-200" />
-										<div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+										{slides[currentSlide].buttonText}
+										<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
 									</a>
 								</Button>
 							</motion.div>
@@ -232,31 +221,18 @@ export default function HeroSection() {
 
 			{/* Navigation Controls */}
 			<div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-				<div className="flex items-center gap-4">
-					{/* Slide Indicators */}
-					<div className="flex gap-2">
-						{slides.map((_, index) => (
-							<button
-								key={index}
-								onClick={() => setCurrentSlide(index)}
-								className={`w-3 h-3 rounded-full transition-all duration-300 ${
-									index === currentSlide
-										? "bg-white scale-125"
-										: "bg-white/50 hover:bg-white/75"
-								}`}
-							/>
-						))}
-					</div>
-
-					{/* Auto-play Toggle */}
-					{/* <button
-            onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-            className={`p-2 rounded-full transition-all duration-300 ${
-              isAutoPlaying ? "bg-white/20 text-white" : "bg-white/10 text-white/60"
-            } hover:bg-white/30`}
-          >
-            <Play className={`w-4 h-4 ${isAutoPlaying ? "" : "opacity-50"}`} />
-          </button> */}
+				<div className="flex items-center gap-3">
+					{slides.map((_, index) => (
+						<button
+							key={index}
+							onClick={() => setCurrentSlide(index)}
+							className={`transition-all duration-300 rounded-full ${
+								index === currentSlide
+									? "w-8 h-3 bg-white"
+									: "w-3 h-3 bg-white/50 hover:bg-white/75"
+							}`}
+						/>
+					))}
 				</div>
 			</div>
 
@@ -282,18 +258,15 @@ export default function HeroSection() {
 				transition={{ delay: 2, duration: 1 }}
 				className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20"
 			>
-				<div className="flex flex-col items-center text-white/60">
-					{/* <span className="text-sm mb-2 font-light">Scroll to explore</span> */}
-					<motion.div
-						animate={{ y: [0, 8, 0] }}
-						transition={{
-							duration: 2,
-							repeat: Number.POSITIVE_INFINITY,
-							ease: "easeInOut",
-						}}
-						className="w-px h-8 bg-gradient-to-b from-white/60 to-transparent"
-					/>
-				</div>
+				<motion.div
+					animate={{ y: [0, 8, 0] }}
+					transition={{
+						duration: 2,
+						repeat: Number.POSITIVE_INFINITY,
+						ease: "easeInOut",
+					}}
+					className="w-px h-8 bg-gradient-to-b from-white/60 to-transparent"
+				/>
 			</motion.div>
 		</section>
 	)

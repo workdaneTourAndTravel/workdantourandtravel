@@ -8,6 +8,7 @@ import './globals.css'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import WhatsappLive from './WhatsappLive'
+import ScrollToTop from '@/components/scroll-to-top'
 import { getActiveAnnouncements, getActiveBanners } from '@/lib/strapi/banners'
 import AnnouncementBar from '@/components/announcement-bar'
 import PopupBanner from '@/components/popup-banner'
@@ -51,6 +52,7 @@ export default async function RootLayout({
         <AnnouncementBar announcements={footerAnnouncements} />
         <Footer />
         <PopupBanner banners={popupBanners} />
+        <ScrollToTop />
         <WhatsappLive
           whatsappNumber={contactInfo.whatsapp_number}
           whatsappMessage={contactInfo.whatsapp_message}

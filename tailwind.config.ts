@@ -9,6 +9,10 @@ const config = {
     "./src/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    // Dynamic color classes used in [slug] pages
+    { pattern: /^(bg|text|from|to|via|border)-(blue|red|green|purple|orange|cyan|emerald)-(50|100|200|300|400|500|600|700|800|900)$/ },
+  ],
   prefix: "",
   theme: {
     container: {
@@ -19,6 +23,9 @@ const config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

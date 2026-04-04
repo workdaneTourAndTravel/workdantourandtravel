@@ -2,9 +2,8 @@
 
 import React from 'react'
 import Image from 'next/image'
-import { Box, Container, Typography, Chip } from "@mui/material"
 import { useState } from "react"
-import { MapPin, Phone, Mail, Clock, Send, MessageSquare, Plane, Users } from "lucide-react"
+import { MapPin, Phone, Mail, Clock, Send, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -87,90 +86,39 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
 
   return (
     <div>
-      <Box sx={{ minHeight: "100vh" }}>
+      <div className="min-h-screen">
       {/* Hero Section */}
-      <Box
-        sx={{
-          position: "relative",
-          height: { xs: "50vh", md: "70vh" },
-          overflow: "hidden",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            zIndex: 0,
-            "&::before": {
-              content: '""',
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-              background: "rgba(0, 0, 0, 0.7)",
-              zIndex: 1,
-            },
-          }}
-        >
-          <Box
-            component="img"
-            src="/about-us/aboutUs-hero-section.png?height=1080&width=1920&text=Ethiopian+Landscape"
-            alt="Contact Us"
-            sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-            }}
-          />
-        </Box>
-
-        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 2, color: "white", textAlign: "left" }}>
-          <Typography
-            variant="h1"
-            component="h1"
-            sx={{
-              fontWeight: "bold",
-              fontSize: { xs: "3rem", md: "5rem" },
-              mb: 2,
-              textShadow: "0 4px 8px rgba(0,0,0,0.3)",
-              background: "linear-gradient(135deg, rgba(65, 105, 225, 0.8) 0%, rgba(0, 0, 255, 0.9) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
+      <div className="relative h-[50vh] md:h-[60vh] overflow-hidden flex items-center justify-center">
+        <Image
+          src="/about-us/aboutUs-hero-section.png"
+          alt="Contact Us"
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        <div className="relative z-10 container text-left">
+          <h1 className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg">
             Get In Touch
-          </Typography>
-        </Container>
-      </Box>
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-6">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">Get In Touch</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to embark on your next adventure? We&apos;re here to help you plan the perfect journey. Contact us today
-            and let&apos;s make your travel dreams come true.
+          </h1>
+          <p className="mt-4 text-xl text-white/80 max-w-2xl">
+            Ready to embark on your next adventure? We&apos;re here to help you plan the perfect journey.
           </p>
         </div>
+      </div>
+
+    <section className="py-20 bg-gray-50">
+      <div className="container mx-auto px-6">
 
         <div className="grid lg:grid-cols-3 gap-12">
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <Card className="shadow-lg border-0">
-              <CardHeader className="bg-teal-500 text-white rounded-t-lg">
+              <CardHeader className="bg-blue-600 text-white rounded-t-lg">
                 <CardTitle className="text-2xl flex items-center">
                   <MessageSquare className="mr-3 h-6 w-6" />
                   Send Us a Message
                 </CardTitle>
-                <CardDescription className="text-teal-100">
+                <CardDescription className="text-blue-100">
                   Fill out the form below and we&apos;ll get back to you within minutes.
                 </CardDescription>
               </CardHeader>
@@ -187,7 +135,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
                         placeholder="Enter your full name"
                         value={formData.name}
                         onChange={(e) => handleInputChange("name", e.target.value)}
-                        className="border-gray-300 focus:border-teal-500 focus:ring-teal-500"
+                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                         required
                       />
                     </div>
@@ -201,7 +149,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
                         placeholder="Enter your email"
                         value={formData.email}
                         onChange={(e) => handleInputChange("email", e.target.value)}
-                        className="border-gray-300 focus:border-teal-500 focus:ring-teal-500"
+                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                         required
                       />
                     </div>
@@ -218,7 +166,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
                         placeholder="+xxx xxxx xxxx"
                         value={formData.phone}
                         onChange={(e) => handleInputChange("phone", e.target.value)}
-                        className="border-gray-300 focus:border-teal-500 focus:ring-teal-500"
+                        className="border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
                     <div className="space-y-2">
@@ -226,7 +174,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
                         Service Interest
                       </Label>
                       <Select onValueChange={(value) => handleInputChange("service", value)}>
-                        <SelectTrigger className="border-gray-300 focus:border-teal-500 focus:ring-teal-500">
+                        <SelectTrigger className="border-gray-300 focus:border-blue-500 focus:ring-blue-500">
                           <SelectValue placeholder="Select a service" />
                         </SelectTrigger>
                         <SelectContent>
@@ -250,7 +198,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
                       placeholder="Tell us about your travel plans, questions, or how we can help you..."
                       value={formData.message}
                       onChange={(e) => handleInputChange("message", e.target.value)}
-                      className="border-gray-300 focus:border-teal-500 focus:ring-teal-500 min-h-[120px]"
+                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 min-h-[120px]"
                       required
                     />
                   </div>
@@ -271,7 +219,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
           <div className="space-y-8">
             {/* Contact Details */}
             <Card className="shadow-lg border-0">
-              <CardHeader className="bg-gray-900 text-white rounded-t-lg">
+              <CardHeader className="bg-blue-600 text-white rounded-t-lg">
                 <CardTitle className="text-xl">Contact Information</CardTitle>
               </CardHeader>
               <CardContent className="p-6 space-y-6">
@@ -328,7 +276,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
 
             {/* Business Hours */}
             <Card className="shadow-lg border-0">
-              <CardHeader className="bg-teal-500 text-white rounded-t-lg">
+              <CardHeader className="bg-blue-600 text-white rounded-t-lg">
                 <CardTitle className="text-xl flex items-center">
                   <Clock className="mr-2 h-5 w-5" />
                   Business Hours
@@ -364,7 +312,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
 
                 <Button
                   variant="outline"
-                  className="w-full border-teal-500 text-teal-600 hover:bg-teal-50 justify-start"
+                  className="w-full border-blue-500 text-blue-600 hover:bg-blue-50 justify-start"
                   asChild
                 >
                   <a href={`tel:${primaryPhone.replace(/\s/g, '')}`}>
@@ -378,7 +326,7 @@ function ContactClient({ contactInfo = {} }: ContactClientProps) {
         </div>
       </div>
     </section>
-      </Box>
+      </div>
     </div>
   )
 }

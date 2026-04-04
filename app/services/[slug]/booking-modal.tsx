@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { X } from 'lucide-react'
+import { X, Send } from 'lucide-react'
 
 interface BookingFormData {
   fullName: string
@@ -20,9 +20,10 @@ interface BookingModalProps {
   tourTitle: string
   whatsappNumber: string
   buttonClassName?: string
+  buttonText?: string
 }
 
-export function BookingModal({ tourTitle, whatsappNumber, buttonClassName }: BookingModalProps) {
+export function BookingModal({ tourTitle, whatsappNumber, buttonClassName, buttonText = "Get Started" }: BookingModalProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [formData, setFormData] = useState<BookingFormData>({
     fullName: "",
@@ -67,16 +68,16 @@ export function BookingModal({ tourTitle, whatsappNumber, buttonClassName }: Boo
       const { fullName, email, phone, participants, preferredDate, comments } = formData
 
       const message = `
-📍 *Booking Request - ${tourTitle}*
+*Service Inquiry - ${tourTitle}*
 
-👤 *Name:* ${fullName}
-📧 *Email:* ${email}
-📱 *Phone:* ${phone}
-👥 *Participants:* ${participants}
-📅 *Preferred Date:* ${preferredDate}
-📝 *Comments:* ${comments || "N/A"}
+*Name:* ${fullName}
+*Email:* ${email}
+*Phone:* ${phone}
+*Number of People:* ${participants}
+*Preferred Date:* ${preferredDate}
+*Details:* ${comments || "N/A"}
 
-Please provide package details and confirm availability.
+Please provide service details and confirm availability.
       `.trim()
 
       const cleanNumber = whatsappNumber.replace(/\D/g, '')
@@ -107,15 +108,23 @@ Please provide package details and confirm availability.
         size="lg"
         className={buttonClassName}
       >
-        Book Your Tour
+        {buttonText}
       </Button>
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
+          onClick={(e) => { if (e.target === e.currentTarget) closeModal() }}
+        >
+          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+            {/* Header with accent bar */}
+            <div className="bg-gradient-to-r from-blue-600 to-cyan-600 h-1.5 rounded-t-2xl" />
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-2xl font-bold text-gray-900">Book {tourTitle}</h3>
+                <div>
+                  <h3 className="text-2xl font-bold text-gray-900">Request a Consultation</h3>
+                  <p className="text-sm text-gray-500 mt-1">{tourTitle}</p>
+                </div>
                 <button
                   onClick={closeModal}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -126,20 +135,38 @@ Please provide package details and confirm availability.
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-                    Full Name *
-                  </Label>
-                  <Input
-                    id="fullName"
-                    name="fullName"
-                    type="text"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                    className={`mt-1 ${formErrors.fullName ? "border-red-500" : ""}`}
-                    placeholder="Enter your full name"
-                  />
-                  {formErrors.fullName && <p className="text-red-500 text-sm mt-1">{formErrors.fullName}</p>}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">
+                      Full Name *
+                    </Label>
+                    <Input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      value={formData.fullName}
+                      onChange={handleInputChange}
+                      className={`mt-1 ${formErrors.fullName ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"}`}
+                      placeholder="Your full name"
+                    />
+                    {formErrors.fullName && <p className="text-red-500 text-xs mt-1">{formErrors.fullName}</p>}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                      Phone *
+                    </Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className={`mt-1 ${formErrors.phone ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"}`}
+                      placeholder="+xxx xxxx xxxx"
+                    />
+                    {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
+                  </div>
                 </div>
 
                 <div>
@@ -152,82 +179,69 @@ Please provide package details and confirm availability.
                     type="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className={`mt-1 ${formErrors.email ? "border-red-500" : ""}`}
-                    placeholder="Enter your email address"
+                    className={`mt-1 ${formErrors.email ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"}`}
+                    placeholder="your@email.com"
                   />
-                  {formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
+                  {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
                 </div>
 
-                <div>
-                  <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                    Phone Number *
-                  </Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className={`mt-1 ${formErrors.phone ? "border-red-500" : ""}`}
-                    placeholder="Enter your phone number"
-                  />
-                  {formErrors.phone && <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>}
-                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="participants" className="text-sm font-medium text-gray-700">
+                      Participants *
+                    </Label>
+                    <Input
+                      id="participants"
+                      name="participants"
+                      type="number"
+                      min="1"
+                      max="20"
+                      value={formData.participants}
+                      onChange={handleInputChange}
+                      className={`mt-1 ${formErrors.participants ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"}`}
+                    />
+                    {formErrors.participants && <p className="text-red-500 text-xs mt-1">{formErrors.participants}</p>}
+                  </div>
 
-                <div>
-                  <Label htmlFor="participants" className="text-sm font-medium text-gray-700">
-                    Number of Participants *
-                  </Label>
-                  <Input
-                    id="participants"
-                    name="participants"
-                    type="number"
-                    min="1"
-                    max="20"
-                    value={formData.participants}
-                    onChange={handleInputChange}
-                    className={`mt-1 ${formErrors.participants ? "border-red-500" : ""}`}
-                  />
-                  {formErrors.participants && <p className="text-red-500 text-sm mt-1">{formErrors.participants}</p>}
-                </div>
-
-                <div>
-                  <Label htmlFor="preferredDate" className="text-sm font-medium text-gray-700">
-                    Preferred Date *
-                  </Label>
-                  <Input
-                    id="preferredDate"
-                    name="preferredDate"
-                    type="date"
-                    value={formData.preferredDate}
-                    onChange={handleInputChange}
-                    className={`mt-1 ${formErrors.preferredDate ? "border-red-500" : ""}`}
-                    min={new Date().toISOString().split("T")[0]}
-                  />
-                  {formErrors.preferredDate && <p className="text-red-500 text-sm mt-1">{formErrors.preferredDate}</p>}
+                  <div>
+                    <Label htmlFor="preferredDate" className="text-sm font-medium text-gray-700">
+                      Preferred Date *
+                    </Label>
+                    <Input
+                      id="preferredDate"
+                      name="preferredDate"
+                      type="date"
+                      value={formData.preferredDate}
+                      onChange={handleInputChange}
+                      className={`mt-1 ${formErrors.preferredDate ? "border-red-500 focus:ring-red-500" : "focus:ring-blue-500"}`}
+                      min={new Date().toISOString().split("T")[0]}
+                    />
+                    {formErrors.preferredDate && <p className="text-red-500 text-xs mt-1">{formErrors.preferredDate}</p>}
+                  </div>
                 </div>
 
                 <div>
                   <Label htmlFor="comments" className="text-sm font-medium text-gray-700">
-                    Tour Preferences & Special Requests
+                    Special Requests
                   </Label>
                   <Textarea
                     id="comments"
                     name="comments"
                     value={formData.comments}
                     onChange={handleInputChange}
-                    className="mt-1"
+                    className="mt-1 focus:ring-blue-500"
                     placeholder="Any special requirements or preferences..."
                     rows={3}
                   />
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button type="button" variant="outline" onClick={closeModal} className="flex-1 bg-transparent">
+                  <Button type="button" variant="outline" onClick={closeModal} className="flex-1">
                     Cancel
                   </Button>
-                  <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700">
-                    Submit Booking
+                  <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold">
+                    <Send className="w-4 h-4 mr-2" />
+                    Submit Inquiry
                   </Button>
                 </div>
               </form>

@@ -28,7 +28,7 @@ export default async function ServicesPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-green-900/70 to-blue-900/70 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60 z-10"></div>
         <Image
           src="/hero-section/hero-section.png"
           alt="Our Services"
@@ -47,9 +47,9 @@ export default async function ServicesPage() {
       </section>
 
       {/* Services Grid Section */}
-      <section className="py-16 px-4 max-w-7xl mx-auto">
+      <section className="py-20 px-4 max-w-7xl mx-auto">
         <div className="mb-12 text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-blue-500 mb-4">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl text-blue-600 mb-4">
             What We Offer
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -81,7 +81,7 @@ export default async function ServicesPage() {
                 {/* Image */}
                 <div className="relative h-64 overflow-hidden">
                   <Image
-                    src={getStrapiImageUrl(service.hero_image || service.main_image)}
+                    src={getStrapiImageUrl(service.hero_image)}
                     alt={service.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -107,14 +107,14 @@ export default async function ServicesPage() {
                     <div className="space-y-2">
                       {service.offers.slice(0, 3).map((offer, index) => (
                         <div key={index} className="flex items-start gap-2">
-                          <div className="h-1.5 w-1.5 rounded-full bg-green-500 mt-2 flex-shrink-0" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
                           <p className="text-sm text-gray-600 line-clamp-1">
                             {offer.title}
                           </p>
                         </div>
                       ))}
                       {service.offers.length > 3 && (
-                        <p className="text-sm text-green-600 font-medium">
+                        <p className="text-sm text-blue-600 font-medium">
                           +{service.offers.length - 3} more offers
                         </p>
                       )}
@@ -126,7 +126,7 @@ export default async function ServicesPage() {
                 <CardFooter className="pt-4 border-t">
                   <Button
                     asChild
-                    className="w-full bg-green-600 hover:bg-green-700 group"
+                    className="w-full bg-blue-600 hover:bg-blue-700 group"
                   >
                     <Link href={`/services/${service.slug}`}>
                       Learn More
@@ -141,7 +141,7 @@ export default async function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 px-4 bg-gradient-to-r from-green-600 to-emerald-600">
+      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-blue-700">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Need Expert Assistance?
@@ -153,7 +153,7 @@ export default async function ServicesPage() {
             <Button
               asChild
               size="lg"
-              className="bg-white text-green-600 hover:bg-gray-50 text-lg px-8 py-6 h-auto font-semibold"
+              className="bg-white text-blue-600 hover:bg-gray-50 text-lg px-8 py-6 h-auto font-semibold"
             >
               <Link href="/contact">Contact Us</Link>
             </Button>
@@ -161,7 +161,7 @@ export default async function ServicesPage() {
               asChild
               size="lg"
               variant="outline"
-              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-green-600 text-lg px-8 py-6 h-auto font-semibold"
+              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8 py-6 h-auto font-semibold"
             >
               <Link href="/packages">View Tour Packages</Link>
             </Button>

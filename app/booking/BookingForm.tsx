@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -100,7 +101,11 @@ interface BookingFormProps {
 }
 
 export default function BookingForm({ whatsappNumber = "251906700007" }: BookingFormProps) {
-  const [bookingType, setBookingType] = useState<BookingType>("flight")
+  const searchParams = useSearchParams()
+  const [bookingType, setBookingType] = useState<BookingType>(() => {
+    const page = searchParams.get("page")
+    return page === "hotel" ? "hotel" : "flight"
+  })
   const [airportOptions, setAirportOptions] = useState<Airport[]>([])
   const [cityOptions, setCityOptions] = useState<City[]>([])
   const [tripType, setTripType] = useState<"roundtrip" | "oneway" | "multicity">("roundtrip")
@@ -148,6 +153,17 @@ export default function BookingForm({ whatsappNumber = "251906700007" }: Booking
 
   const [errors, setErrors] = useState<FormErrors>({})
   const [isSubmitted, setIsSubmitted] = useState(false)
+
+  // Sync booking type with URL search params (handles navbar clicks while already on /booking)
+  useEffect(() => {
+    const page = searchParams.get("page")
+    if (page === "hotel" && bookingType !== "hotel") {
+      handleBookingTypeChange("hotel")
+    } else if (page === "flight" && bookingType !== "flight") {
+      handleBookingTypeChange("flight")
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams])
 
   useEffect(() => {
     // Load airports for flight booking

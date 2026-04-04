@@ -59,9 +59,9 @@ export default function NavbarClient({ tourLinks, serviceLinks, logoUrl = '/logo
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3">
           <div className="flex items-center">
-            <Image src={logoUrl} alt="workdan logo" width={100} height={200} />
+            <Image src={logoUrl} alt="workdan logo" width={140} height={50} className="h-12 w-auto" />
             <div className="ml-3">
-              <div className="text-xl font-bold text-blue-500">{siteName}</div>
+              <div className="text-lg font-bold text-blue-600 leading-tight">{siteName}</div>
             </div>
           </div>
         </Link>
@@ -171,9 +171,9 @@ export default function NavbarClient({ tourLinks, serviceLinks, logoUrl = '/logo
                     <NavigationMenuLink asChild>
                       <Link
                         href="/services"
-                        className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors bg-green-50 hover:bg-green-100 text-center"
+                        className="block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors bg-blue-50 hover:bg-blue-100 text-center"
                       >
-                        <div className="text-sm font-medium text-green-600">
+                        <div className="text-sm font-medium text-blue-600">
                           View All Services →
                         </div>
                       </Link>
@@ -206,7 +206,7 @@ export default function NavbarClient({ tourLinks, serviceLinks, logoUrl = '/logo
           <Button
             asChild
             variant="outline"
-            className="border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white px-4 py-2 rounded-full font-medium transition-all duration-200 bg-transparent"
+            className="border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-4 py-2 rounded-full font-medium transition-all duration-200 bg-transparent"
           >
             <Link href="/booking?page=flight" className="flex items-center space-x-2">
               <Plane className="h-4 w-4" />
@@ -226,9 +226,9 @@ export default function NavbarClient({ tourLinks, serviceLinks, logoUrl = '/logo
           <SheetContent side="right" className="w-[300px] sm:w-[400px]">
             <SheetHeader>
               <SheetTitle className="flex items-center space-x-3 text-left">
-                <Image src={logoUrl} alt="workdan logo" width={100} height={200} />
+                <Image src={logoUrl} alt="workdan logo" width={140} height={50} className="h-10 w-auto" />
                 <div>
-                  <div className="text-lg font-bold text-blue-500">{siteName}</div>
+                  <div className="text-lg font-bold text-blue-600 leading-tight">{siteName}</div>
                 </div>
               </SheetTitle>
             </SheetHeader>
@@ -248,7 +248,7 @@ export default function NavbarClient({ tourLinks, serviceLinks, logoUrl = '/logo
                 onClick={() => setIsOpen(false)}
               >
                 <Users className="h-5 w-5" />
-                <span>Who We Are</span>
+                <span>About</span>
               </Link>
 
               <Collapsible>
@@ -312,7 +312,7 @@ export default function NavbarClient({ tourLinks, serviceLinks, logoUrl = '/logo
                       ))}
                       <Link
                         href="/services"
-                        className="flex items-center space-x-3 text-sm text-green-600 hover:text-green-700 font-medium transition-colors py-1"
+                        className="flex items-center space-x-3 text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors py-1"
                         onClick={() => setIsOpen(false)}
                       >
                         <Globe className="h-4 w-4" />
@@ -348,7 +348,7 @@ export default function NavbarClient({ tourLinks, serviceLinks, logoUrl = '/logo
                 <Button
                   asChild
                   variant="outline"
-                  className="w-full border-2 border-green-500 text-green-500 hover:bg-green-500 hover:text-white rounded-full font-medium bg-transparent"
+                  className="w-full border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white rounded-full font-medium bg-transparent"
                 >
                   <Link
                     href="/booking?page=flight"
