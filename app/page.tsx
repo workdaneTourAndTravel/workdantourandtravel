@@ -132,7 +132,7 @@ export default function Home() {
                     key={dest.id}
                     title={dest.title}
                     description={dest.description?.[0]?.children?.[0]?.text || 'No description available'}
-                    imageSrc={dest.image?.[0]?.url ? `${STRAPI_URL}${dest.image[0].formats?.large?.url || dest.image[0].formats?.medium?.url || dest.image[0].url}` : "/placeholder.svg"}
+                    imageSrc={(() => { const imgUrl = dest.image?.[0]?.formats?.large?.url || dest.image?.[0]?.formats?.medium?.url || dest.image?.[0]?.url; if (!imgUrl) return "/placeholder.svg"; return imgUrl.startsWith("http") ? imgUrl : `${STRAPI_URL}${imgUrl}`; })()}
                     icon={<MapPin className="h-4 w-4" />}
                     tags={dest.tags ? dest.tags.split(/\s*,\s*|\s+/).map((t: string) => t.trim()).filter(Boolean) : []}
                     featured={index === 0}

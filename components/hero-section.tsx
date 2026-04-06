@@ -104,7 +104,7 @@ export default function HeroSection() {
 					.filter((hero: any) => hero.is_active)
 					.map((hero: any) => ({
 						id: hero.id,
-						image: `${STRAPI_URL}${hero.background_image?.[0]?.formats?.large?.url || hero.background_image?.[0]?.url}`,
+						image: (() => { const u = hero.background_image?.[0]?.formats?.large?.url || hero.background_image?.[0]?.url; return u?.startsWith('http') ? u : `${STRAPI_URL}${u}`; })(),
 						title: hero.title,
 						subtitle: hero.subtitle,
 						buttonText: hero.button_text,
