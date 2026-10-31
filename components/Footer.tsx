@@ -53,6 +53,7 @@ export default function Footer() {
     { href: "/services/visa-services", label: t("footer.svc.visa") },
     { href: "/services/uae-pcc-attestation", label: t("footer.svc.pcc") },
     { href: "/booking", label: t("footer.svc.booking") },
+    { href: "https://business.workdane.com", label: "Business setup in the UAE" },
   ]
 
   const socialLinks = [
